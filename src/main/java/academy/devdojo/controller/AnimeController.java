@@ -11,6 +11,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class AnimeController {
                 .stream()
                 .filter(anime -> anime.getId().equals(id))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Anime not found to be delete"));
         var response = MAPPER.toAnimeGetResponse(animeFound);
         return ResponseEntity.ok(response);
 
@@ -56,6 +57,19 @@ public class AnimeController {
         Anime.getAnimes().add(anime);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+//    @DeleteMapping("{id}")
+//    public ResponseEntity<Void> delete(@PathVariable Long id){
+//        log.info("Request received to delete the producer,by id '{}'", id);
+//        var producer = Producer.getProducers()
+//                .stream()
+//                .filter(producerDelete -> producerDelete.getId().equals(id))
+//                .findFirst()
+//                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producer not found to be delete"));
+//        Producer.getProducers().remove(producer);
+//        return ResponseEntity.noContent().build();
+//
+//    }
 
 
 }
